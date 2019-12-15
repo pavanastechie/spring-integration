@@ -8,6 +8,8 @@ import org.springframework.messaging.handler.annotation.Header;
 
 import com.onlinetechvision.model.CargoMessage;
 
+import java.util.List;
+
 /**
  * Cargo Service Activator is a generic endpoint for connecting service instance to the messaging system.
  * 
@@ -26,9 +28,10 @@ public class CargoServiceActivator {
      * @param cargoMessage domestic/international cargo message
      * @param batchId message header shows cargo batch id
      */
-	@ServiceActivator(inputChannel = "cargoTransformerOutputChannel")
-	public void getCargo(CargoMessage cargoMessage, @Header("CARGO_BATCH_ID") long batchId) {
-		logger.debug("Message in Batch[" + batchId + "] is received with payload : " + cargoMessage);
+	@ServiceActivator(inputChannel = "cargoAggregatorOutputChannel", outputChannel = "testChannel")
+	public List<CargoMessage> getCargo(List<CargoMessage> cargoMessage, @Header("CARGO_BATCH_ID") long batchId) {
+		logger.debug("Message in Batch[" + batchId + "] is received with payload : " + cargoMessage.toString());
+		return cargoMessage;
 	}
 
 }
